@@ -24,16 +24,22 @@ test:
 	$(MAKE) -C ./tests
 
 cmd:
-	docker run $(TAI_DOCKER_RUN_OPTION) -v $(TAI_DOCKER_MOUNT) -w $(TAI_DOCKER_WORKDIR) $(TAI_DOCKER_CMD_IMAGE) $(TAI_DOCKER_CMD)
+	docker run ${TAI_DOCKER_RUN_OPTION} \
+		-v ${TAI_DOCKER_MOUNT} \
+		-w ${TAI_DOCKER_WORKDIR} \
+		${TAI_DOCKER_CMD_IMAGE} \
+		${TAI_DOCKER_CMD}
 
 image:
-	DOCKER_BUILDKIT=1 docker build $(TAI_DOCKER_BUILD_OPTION) --build-arg TAI_DOCKER_BUILDER_IMAGE=$(TAI_DOCKER_BUILDER_IMAGE) \
-								  -f docker/run.Dockerfile \
-								  -t $(TAI_DOCKER_IMAGE) .
+	docker build ${TAI_DOCKER_BUILD_OPTION} \
+		--build-arg TAI_DOCKER_BUILDER_IMAGE=${TAI_DOCKER_BUILDER_IMAGE} \
+		--file docker/run.Dockerfile \
+		--tag ${TAI_DOCKER_IMAGE} .
 
 builder:
-	DOCKER_BUILDKIT=1 docker build $(TAI_DOCKER_BUILD_OPTION) -f docker/builder.Dockerfile \
-				       -t $(TAI_DOCKER_BUILDER_IMAGE) .
+	docker build ${TAI_DOCKER_BUILD_OPTION} \
+		--file docker/builder.Dockerfile \
+		--tag ${TAI_DOCKER_BUILDER_IMAGE} .
 
 bash:
 	$(MAKE) cmd
